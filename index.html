@@ -1,167 +1,51 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Parser module that defines Lox syntactical grammar and constructs ASTs"><meta name="keywords" content="rust, rustlang, rust-lang, parser"><title>loxrust::_lox_::parser - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script>
-    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../loxrust/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.png" alt="logo"></div>
-        </a><h2 class="location">Module parser</h2><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li></ul></div><div id="sidebar-vars" data-name="parser" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../loxrust/index.html"><img class="rust-logo" src="../../../rust-logo.png" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><h1 class="fqn"><span class="in-band">Module <a href="../../index.html">loxrust</a>::<wbr><a href="../index.html">_lox_</a>::<wbr><a class="mod" href="#">parser</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../../../src/loxrust/_lox_/parser/mod.rs.html#1-189" title="goto source code">[src]</a></span></h1><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h3 id="parser-module-that-defines-lox-syntactical-grammar-and-constructs-asts" class="section-header"><a href="#parser-module-that-defines-lox-syntactical-grammar-and-constructs-asts">Parser module that defines Lox syntactical grammar and constructs ASTs</a></h3>
-<p>The way we address the expression problem here, which briefly states, that due to the way languages are designed
-certain operations are difficult without modifying pre-existing code. In the OOP paradigm, a class contains behaviour bundled with it, but let’s say
-we were introducing a new behaviour across all our types, that would imply modifying code from each of our pre-existing
-types to include that behaviour, uniquely implemented for each class. This goes against two principles that we’d like
-to uphold when writing scalable software, the first being the open-close principle which briefly states that scalable
-software should be open to extension but closed to modification. Another problem with bundling behaviour with the class
-is violation of concerns. A tree node shouldn’t have methods pertaining specifically either to the parser where it is
-produced or the interpreter where it is consumed. This leads to a violation of separation of concerns where
-two domains are stepping on each other’s toes by smushing interpreter and parser specific logic in the same location
-which is the class definition.</p>
-<p>In the functional programming paradigm, new operations are easy to add, and types are mostly inert, with no behaviour defined on them. Instead, behaviour, known as functions, pattern match on the type that’s passed to them and then perform the appropriate action
-This has a downside, because first, if you were to add a new operation, it’s adheres to extensibility as you can
-add code, in a function, and then write it for each pre-existing type. But what happens when you have to add
-new type? That would imply going back to each function’s code, which remember, we must treat as untouchable, and modify
-it violating our contract with the open-close principle.
-It would be nice if we could just add new types like OOP paradigm, by bundling the implementation of a each behaviour while defining our type, and
-it would also be desirable to include new operations like the FP way but without having to modify any pre-existing behaviour code</p>
-<p>In Rust, which borrows some ideas from FP, behavriour is decoupled from structs and enums, and we are free
-to choose traits that we’d want on our types</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhishek Shah</title>
+</head>
+<body>
+    <h2>The 3 essential skills of becoming better at anything</h2>
+    <p>
+        <div class="post-content">
+            This is not a post about what you should or shouldn't do to get better at something, but rather, what you <strong>must</strong>
+            and <strong>essentially</strong> do. I've identified 3 must-dos that anyone learning to build a skill that will last a lifetime
+            must employ and those are 
+            <ul>
+                <li>Dedicated and Focused activity related to your Skill</li>
+                <li>Consistency</li>
+                <li>Voluntary relaxation</li>
+            </ul>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">trait</span> <span class="ident">NewOp</span> {
-    <span class="kw">fn</span> <span class="ident">new_op</span>();
-}
+            That's it. That's the TL;DR. If you're interested keep reading: 
 
-<span class="comment">// Then implement this trait for each of the pre-existing types</span>
-<span class="kw">impl</span> <span class="ident">NewOp</span> <span class="kw">for</span> <span class="ident">Expr</span> { .. }
-<span class="kw">impl</span> <span class="ident">NewOp</span> <span class="kw">for</span> <span class="ident">Stmt</span> { .. }</code></pre></div>
-<p>If we have to add a new type, adding structs is trivial, but what if we want something like an
-enum to pattern match on them? This would be going against the OC principle, as we would be required to
-<em>modify</em> pre-existing enum code, but there’s a workaround for it:</p>
+            First, what is <strong>Dedicated and Focused activity related to your Skill?</strong>
+            <br>
+            Simply you need to pracice your craft. For at least 1-4 hours each day. High quality human cognition is a limited and scarce resource.
+            During the span of the day, you only get so much of it. Beginners can expect anywhere from half and hour to a full hour of dedicated attention
+            while more experienced skill builders will find themselves with 3-4 hours of high quality attention.
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ExtendExpression</span> {
-    <span class="ident">NewExpr</span>,
-    <span class="ident">OldExpr</span>(<span class="ident">Expression</span>)
-}
+            An understanding of this resource is crucial in order to avoid wasting too much time in the beginning of your skill building journey, or simply falling 
+            into the victim-hood mentality of saying "I'm not good/smart enough to master this skill". Every body who can survive is by definition "smart". They know how 
+            to solve problems, otherwise it wouldn't be possible to survive for too long. If you are here reading this, chances are you are already good at survival
+            and thus that means you have everything you need to get started. Begin at once to establish a habit where at a set time in the day, you sit or execute whatever
+            is required in your skill. If you are a coder, it means writing some code that builds something. If you are learning an instrument, it means spending time with your 
+            instrument. But remember that in the beginning and for long after that it may happen that you just don't have the cognitive resources to stick with it long enough.
+            That's fine, it gets better as you do it.
 
-<span class="kw">impl</span> <span class="ident">ExtendExpression</span> {
-    <span class="kw">fn</span> <span class="ident">dispatch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-      <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">OldExpr</span>(<span class="ident">E</span>) =&gt; <span class="macro">todo!</span>(),
-            <span class="ident">NewExpr</span> =&gt; <span class="macro">todo!</span>(),
-        }  
-    }
-}</code></pre></div>
-<p>A third way would be to have no enums at all, just structs for each type of expression or statements,
-like so:</p>
+            The second point is Consistency. To illustrate this point I like this picture: 
+            <img src="static-assets/consistency.png" alt="consistency">
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">struct</span> <span class="ident">BinaryExpr</span>;
-<span class="kw">struct</span> <span class="ident">Literal</span>;
-<span class="kw">struct</span> <span class="ident">Grouping</span>;</code></pre></div>
-<p>The problem however is types like <code>BinaryExpr</code> require references to other kinds of <code>Expression</code>.</p>
-<p>If we were writing an enum Expression, it would be trivial to write</p>
+            The third and probably the most underrated and crucial, is voluntary relaxation.
+            It is my experience that after you do an activity for 1-2 hours, you must schedule an appointment with yourself, where, depending on your energy level
+            you must either relax, meditate, take a nap, listen to soothing music, go out for a walk, go by a lake to take in the fresh air,
+            or do anything that is less of a cognitive load than what you just experienced while doing your skill related activity.
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">struct</span> <span class="ident">BinaryExpr</span> {
-    <span class="ident">left</span> : <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expression</span><span class="op">&gt;</span>
-    <span class="ident">right</span> : <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expression</span><span class="op">&gt;</span>
-}</code></pre></div>
-<p>But as we discussed, this brings us back to having a closed type, <code>Expression</code> which cannot be extended without
-a wrapper Enum. The solution could be trait objects. We could instead have a <code>trait Expression</code></p>
+            <strong>If the skill activity is like the crest of a wave, this part is the trough. Consistency, is the wavelength.</strong>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Expression</span> {
-    <span class="kw">fn</span> <span class="ident">eval</span>();
-    <span class="kw">fn</span> <span class="ident">pretty_print</span>();
-}
-
-<span class="kw">struct</span> <span class="ident">BinaryExpr</span> {
-    <span class="ident">left</span> : <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Expression</span><span class="op">&gt;</span>
-    <span class="ident">right</span> : <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Expression</span><span class="op">&gt;</span>
-}</code></pre></div>
-<p>But this comes with it’s own problems regarding modification. Consider now adding a new operation. We would be required
-to go back to this trait definition, add the new operation, then modifying the impl block for each type that implements
-Expression trait, and modify them in turn. A nightmare for open-close principle.</p>
-<p>We could however, keep <code>Expression</code> empty, only using it as a placeholder in places like <code>left</code> and <code>right</code> fields
-of struct <code>BinaryExpr</code>, and then, when adding new operations, write a trait as an operation, that is a sub-trait of Expression</p>
-
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="doccomment">/// A trait that prints, used by parsers for debug printing</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Printer</span> : <span class="ident">Expression</span> {
-    <span class="kw">fn</span> <span class="ident">print</span>();
-}
-
-<span class="doccomment">/// A trait that evaluates an expression to a literal value</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Evaluate</span> : <span class="ident">Expression</span> {
-    <span class="kw">fn</span> <span class="ident">eval</span>();
-}</code></pre></div>
-<p>And then implement these traits on our structs. This will probably take us to generic land as we would have to
-make use of trait bounds in order to make sure that our structs can actually <code>eval()</code> or <code>print()</code> if they nest
-other expression types.</p>
-<p>Consider this</p>
-
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BinaryExpr</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Expression</span>,
-    <span class="ident">R</span>: <span class="ident">Expression</span>,
-{
-    <span class="ident">left</span>: <span class="ident">L</span>,
-    <span class="ident">right</span>: <span class="ident">R</span>,
-}</code></pre></div>
-<p>Is this any better? Maybe. Our initial problem was that we needed two types of abstraction,
-one for the types, which would allow nesting types within types like <code>BinaryExpr</code> and <code>Grouping</code>
-and the other for behaviour decoupled from each other;
-In a way that would allow us to extend behaviour without worrying about modifying existing type or method definitions
-and also to allow adding types without requiring to modify existing code. Rust by default with traits, addresses the first problem. </p>
-<p>The second problem was that if we used an enum to define an overarching type for expression, adding types
-would require modifying this enum. This is where generics come in, providing us the much needed abstraction, without
-having to modify existing code. Consider a trait <code>Expression</code>
-As it stands now, Rust allows us to easily expand behaviour through traits, but to extend types, especially types
-that share the “class”, we would have to resort to enums, wrapped enums in the case of extending types, and if we
-don’t want enums, trait objects is another option, which gets unwieldy due to downcasting required to do anything
-useful, defeating the purpose of having an abstraction in the first place.</p>
-<p>However, generics, in combination with traits, provide, in my experience, a very solid abstraction that can abstract
-over types like expressions, and make it easy to solve the expression problem. How this works out in practice, we
-will have to find out as we implement the parser.</p>
-
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Consider adding a new type</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NewExprType</span> {}
-<span class="comment">// Now let&#39;s see if this design upholds OC principle:</span>
-<span class="comment">// Adding this type to the class of Expression just invovles implementing `trait Expression`</span>
-<span class="kw">impl</span> <span class="ident">Expression</span> <span class="kw">for</span> <span class="ident">NewExprType</span> {}
-<span class="comment">// Now consider the definition of `BinaryExpr`</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BinaryExpr</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Expression</span>,
-    <span class="ident">R</span>: <span class="ident">Expression</span>,
-{
-    <span class="ident">left</span>: <span class="ident">L</span>,
-    <span class="ident">right</span>: <span class="ident">R</span>,
-}
- 
-<span class="comment">// Will this struct construct with our NewExprType? Of course.</span>
-<span class="kw">let</span> <span class="ident">b</span> : <span class="ident">BinaryExpr</span><span class="op">&lt;</span><span class="ident">NewExprType</span>, <span class="ident">NewExprType</span><span class="op">&gt;</span> <span class="op">=</span> 
-    <span class="ident">BinaryExpr</span> { <span class="ident">left</span> : <span class="ident">NewExprType</span> {}, <span class="ident">right</span>: <span class="ident">NewExprType</span> {} };
-<span class="comment">// Now suppose a trait `Eval` exists on `BinaryExpr`</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Eval</span> : <span class="ident">Expression</span> {
-    <span class="kw">fn</span> <span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span>;
-}
-<span class="comment">// note the trait bound of `Expression`, every `Eval` must be an `Expression`</span>
-<span class="comment">// But not all `Expression` is `Eval`</span>
-<span class="comment">// Let&#39;s implement `Eval` for our new type</span>
-<span class="kw">impl</span> <span class="ident">Eval</span> <span class="kw">for</span> <span class="ident">NewExprType</span> {
-    <span class="kw">fn</span> <span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> { <span class="number">42.0</span> }
-}
- 
-<span class="comment">// Let&#39;s see the implementation for BinaryExpr</span>
-<span class="comment">// All that&#39;s required for this eval, is the inner generic types are also `Eval`</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>,<span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Eval</span> <span class="kw">for</span> <span class="ident">BinaryExpr</span><span class="op">&lt;</span><span class="ident">L</span>,<span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Eval</span>
-    <span class="ident">R</span>: <span class="ident">Eval</span>
-{
-    <span class="kw">fn</span> <span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-       <span class="comment">// let&#39;s just add for now</span>
-       <span class="self">self</span>.<span class="ident">left</span>.<span class="ident">eval</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">right</span>.<span class="ident">eval</span>()
-    }
-}</code></pre></div>
-<p>So adding new types was EASY using generics and traits for type abstraction
-and adheres to OC principle. The only problem that I can see with this approach is when implementing a new operation
-say trait <code>OP</code> requires the inner generics to be bounded by something other than <code>OP + Expression</code>, in that case
-the generics trait bound won’t be satisfied and it wouldn’t be possible to implement the operation. But at this point
-It’s good enough to warrant it’s own development branch</p>
-</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2>
-<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="expressions/index.html" title="loxrust::_lox_::parser::expressions mod">expressions</a></div><div class="item-right docblock-short"><p>Expression types</p>
-</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="traits/index.html" title="loxrust::_lox_::parser::traits mod">traits</a></div><div class="item-right docblock-short"><p>Definition for Expression enum, and types that are Expression</p>
-</div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="loxrust" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0 (9d1b2106e 2022-02-23)" ></div>
-</body></html>
+        </div>
+    </p>
+</body>
+</html>
